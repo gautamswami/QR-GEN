@@ -35,8 +35,14 @@ function App() {
     setUrl("");
   };
 
-  const handleDownload = (id) => {
+  const handleDownload = (id,param) => {
     const node = document.getElementById(`qr-code-${id}`);
+    if(param === 'transparent'){
+      node.style.backgroundColor = 'transparent';
+    }
+    if(param === 'white'){
+      node.style.backgroundColor = 'white';
+    }
     toPng(node)
       .then((dataUrl) => {
         const link = document.createElement("a");
@@ -103,7 +109,7 @@ function App() {
         </button>
       </div>
       {qrCodes.length > 0 && (
-      <h3 style={styles.subTitle}>Previously Created QR Codes</h3>
+        <h3 style={styles.subTitle}>Previously Created QR Codes</h3>
       )}
       <div style={styles.qrGrid}>
         {qrCodes.map((qrCode) => (
@@ -115,18 +121,26 @@ function App() {
             >
               <QRCode value={qrCode.url} size={qrCode.size} />
             </div>
-            <button
-              onClick={() => handleDownload(qrCode.id)}
-              style={styles.downloadButton}
-            >
-              Download
-            </button>
-            <button
-              onClick={() => handleRemove(qrCode.id)}
-              style={styles.removeButton}
-            >
-              Remove
-            </button>
+            <div style={styles.buttonBox}>
+              <button
+                onClick={() => handleDownload(qrCode.id,'transparent')}
+                style={styles.downloadButton}
+              >
+                Download transparent 
+              </button>
+              <button
+                onClick={() => handleDownload(qrCode.id,'white')}
+                style={styles.downloadButton}
+              >
+                Download with white background
+              </button>
+              <button
+                onClick={() => handleRemove(qrCode.id)}
+                style={styles.removeButton}
+              >
+                Remove from list
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -192,6 +206,11 @@ const styles = {
     justifyContent: "space-between",
     marginBottom: "20px",
   },
+  buttonBox:{
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "2%",
+  },
   cancelButton: {
     backgroundColor: "var(--button-secondary-background-color)",
     padding: "10px",
@@ -233,6 +252,7 @@ const styles = {
   },
   qrCodeContainer: {
     marginBottom: "10px",
+    padding: "10px",
   },
   downloadButton: {
     backgroundColor: "#4CAF50",
