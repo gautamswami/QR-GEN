@@ -102,8 +102,9 @@ function App() {
           Generate
         </button>
       </div>
-
+      {qrCodes.length > 0 && (
       <h3 style={styles.subTitle}>Previously Created QR Codes</h3>
+      )}
       <div style={styles.qrGrid}>
         {qrCodes.map((qrCode) => (
           <div key={qrCode.id} style={styles.qrPlaceholder}>
