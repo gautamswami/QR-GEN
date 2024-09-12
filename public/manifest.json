@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "QR Generator",
+  "name": "QR Code Generator",
+  "description": "Generate, view, and download QR codes with customizable sizes and themes.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,9 @@
   ],
   "start_url": ".",
   "display": "standalone",
+  "background_color": "#ffffff",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "any",
+  "scope": "/",
+  "lang": "en"
 }
