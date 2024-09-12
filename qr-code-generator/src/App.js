@@ -1,27 +1,33 @@
 import React, { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
-
+import "./app.css"; // Import global CSS
+import { CiLight } from "react-icons/ci";
+import { CiDark } from "react-icons/ci";
 function App() {
+  // Load theme and QR codes from localStorage on initialization
+  const loadQrCodes = () => JSON.parse(localStorage.getItem("qrCodes")) || [];
+  const loadTheme = () => localStorage.getItem("theme") || "light";
+
   const [url, setUrl] = useState("");
-  const [qrCodes, setQrCodes] = useState([]);
+  const [qrCodes, setQrCodes] = useState(loadQrCodes()); // Initialize with loaded QR codes
   const [size, setSize] = useState(100); // State for QR code size
+  const [theme, setTheme] = useState(loadTheme()); // Initialize with stored theme
   const qrRef = useRef(null);
 
-  // Retrieve QR codes from localStorage on component mount
+  // Effect to apply the selected theme
   useEffect(() => {
-    const savedQrCodes = JSON.parse(localStorage.getItem("qrCodes")) || [];
-    setQrCodes(savedQrCodes);
-  }, []);
- 
+    document.body.className = theme === "dark" ? "dark-theme" : ""; // Apply the theme class to the body
+    localStorage.setItem("theme", theme); // Save the theme to localStorage
+  }, [theme]);
 
   const handleGenerate = () => {
     if (url.trim()) {
       const newQRCode = { id: Date.now(), url, size }; // Store size with QR code data
       const updatedQrCodes = [...qrCodes, newQRCode];
       setQrCodes(updatedQrCodes);
+      localStorage.setItem("qrCodes", JSON.stringify(updatedQrCodes)); // Save to localStorage
       setUrl(""); // Clear input after generating
-      localStorage.setItem("qrCodes", JSON.stringify(updatedQrCodes));
     }
   };
 
@@ -45,13 +51,26 @@ function App() {
 
   const handleRemove = (id) => {
     const updatedQrCodes = qrCodes.filter((qrCode) => qrCode.id !== id);
-    setQrCodes(updatedQrCodes); // Update state
-    localStorage.setItem("qrCodes", JSON.stringify(updatedQrCodes));
+    setQrCodes(updatedQrCodes);
+    localStorage.setItem("qrCodes", JSON.stringify(updatedQrCodes)); // Update localStorage
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>QR Code Generator</h2>
+      <div style={styles.headContainer}>
+        <h2 style={styles.titleMain}>QR Code Generator</h2>
+
+        {/* Theme toggle button */}
+        <button onClick={toggleTheme} style={styles.toggleButton}>
+          {theme === "light" ? <CiLight /> : <CiDark />}
+        </button>
+      </div>
+      {/* Input field for URL */}
+
       <input
         type="text"
         placeholder="Paste your URL here"
@@ -123,12 +142,31 @@ const styles = {
     borderRadius: "10px",
     boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
     fontFamily: "Arial, sans-serif",
+    marginTop: "5%",
+  },
+  headContainer: {
+    display: "flex",
+    alignItems: "center",
   },
   title: {
     fontSize: "20px",
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: "10px",
+  },
+  titleMain: {
+    fontSize: "20px",
+    fontWeight: "bold",
+    textAlign: "center",
+    width: "90%",
+  },
+  toggleButton: {
+    backgroundColor: "var(--button-background-color)",
+    color: "var(--button-text-color)",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "30px",
   },
   input: {
     width: "94%",
@@ -154,16 +192,17 @@ const styles = {
     marginBottom: "20px",
   },
   cancelButton: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "var(--button-secondary-background-color)",
     padding: "10px",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
+    color: "var(--button-secondary-text-color)",
     width: "48%",
   },
   generateButton: {
-    backgroundColor: "#000",
-    color: "#fff",
+    backgroundColor: "var(--button-background-color)",
+    color: "var(--button-text-color)",
     padding: "10px",
     border: "none",
     borderRadius: "5px",
@@ -189,7 +228,6 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     padding: "10px",
-    height: "fit-content",
     borderRadius: "5px",
   },
   qrCodeContainer: {
