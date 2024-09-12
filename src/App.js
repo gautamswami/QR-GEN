@@ -4,6 +4,8 @@ import { toPng } from "html-to-image";
 import "./app.css"; // Import global CSS
 import { CiLight } from "react-icons/ci";
 import { CiDark } from "react-icons/ci";
+import { FaDownload } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
 function App() {
   // Load theme and QR codes from localStorage on initialization
   const loadQrCodes = () => JSON.parse(localStorage.getItem("qrCodes")) || [];
@@ -126,19 +128,19 @@ function App() {
                 onClick={() => handleDownload(qrCode.id,'transparent')}
                 style={styles.downloadButton}
               >
-                Download transparent 
+                <FaDownload/> Transparent BG 
               </button>
               <button
                 onClick={() => handleDownload(qrCode.id,'white')}
                 style={styles.downloadButton}
               >
-                Download with white background
+                <FaDownload /> White BG
               </button>
               <button
                 onClick={() => handleRemove(qrCode.id)}
                 style={styles.removeButton}
               >
-                Remove from list
+                <MdDelete /> Remove
               </button>
             </div>
           </div>
@@ -209,7 +211,8 @@ const styles = {
   buttonBox:{
     display: "flex",
     justifyContent: "space-between",
-    gap: "2%",
+    gap: "10px",
+    flexDirection: "column",
   },
   cancelButton: {
     backgroundColor: "var(--button-secondary-background-color)",
@@ -269,7 +272,6 @@ const styles = {
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
-    marginTop: "5px",
   },
 };
 
